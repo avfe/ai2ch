@@ -39,6 +39,25 @@
 * Нейросеть генерирует ответ от лица "местного анона" и добавляет его в базу данных.
 * Обновив страницу, вы увидите ответ нейросети.
 
+## Запуск в Docker
+
+1) Подготовьте `.env` на базе `.env.example` (обязательно задайте `GEMINI_API_KEY`).  
+2) Запуск одним контейнером:
+```bash
+docker build -t ai2ch .
+docker run -d --name ai2ch \
+  --env-file .env \
+  -p 3000:3000 \
+  -v ai2ch-data:/app/data \
+  ai2ch
+```
+3) Запуск с Nginx‑reverse‑proxy (порт 80) через docker-compose:
+```bash
+docker compose up -d
+```
+- Конфиг Nginx: `deploy/nginx/default.conf` (проксирует на `app:3000`).  
+- Данные SQLite живут в volume `sqlite-data` (см. `docker-compose.yml`) или в локальном volume `ai2ch-data` при запуске через `docker run`.
+
 ## Структура БД
 
 SQLite база данных (`neurodvach.sqlite`) состоит из трех таблиц:
