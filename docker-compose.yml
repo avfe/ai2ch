@@ -24,7 +24,6 @@ services:
 
   certbot:
     image: certbot/certbot
-    entrypoint: /bin/sh
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
