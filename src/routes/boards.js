@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const { generateReplyForThread } = require('../gemini/client');
+const { generateRepliesForThread, clampReplyCount } = require('../gemini/client');
 
 // GET / - Список всех борд
 router.get('/', (req, res) => {
@@ -33,7 +33,8 @@ router.get('/:boardSlug', (req, res, next) => {
 // POST /:boardSlug/thread - Создание нового треда
 router.post('/:boardSlug/thread', async (req, res, next) => {
     const { boardSlug } = req.params;
-    const { title, content, geminiApiKey, geminiModelId } = req.body;
+    const { title, content, geminiApiKey, aiReplies, geminiModelId } = req.body;
+    const replyCount = clampReplyCount(aiReplies);
 
     const board = db.prepare('SELECT * FROM boards WHERE slug = ?').get(boardSlug);
     if (!board) return next();
@@ -61,18 +62,21 @@ router.post('/:boardSlug/thread', async (req, res, next) => {
         // Контекст для AI: только что созданный пост
         const allPosts = db.prepare('SELECT id, author_type, content FROM posts WHERE thread_id = ? ORDER BY id ASC').all(threadId);
 
-        const aiResponseText = await generateReplyForThread({
+        const aiResponses = await generateRepliesForThread({
             boardSlug,
             boardTitle: board.title,
             threadTitle: title,
             posts: allPosts,
             userApiKey: geminiApiKey,
-            userModelId: geminiModelId
+            userModelId: geminiModelId,
+            replyCount
         });
 
-        // Сохраняем ответ AI
-        db.prepare('INSERT INTO posts (thread_id, author_type, author_name, content) VALUES (?, ?, ?, ?)')
-            .run(threadId, 'ai', 'Нейросеть', aiResponseText);
+        // Сохраняем ответы AI
+        aiResponses.forEach(text => {
+            db.prepare('INSERT INTO posts (thread_id, author_type, author_name, content) VALUES (?, ?, ?, ?)')
+                .run(threadId, 'ai', 'Нейросеть', text);
+        });
 
         // Обновляем updated_at у треда
         db.prepare('UPDATE threads SET updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(threadId);
