@@ -113,6 +113,14 @@ input[type="text"], textarea {
     border: 1px solid #999;
 }
 
+select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px;
+    border: 1px solid #999;
+    background-color: #fff;
+}
+
 textarea {
     height: 100px;
 }
@@ -121,6 +129,12 @@ button {
     padding: 4px 10px;
     font-weight: bold;
     cursor: pointer;
+}
+
+.form-hint {
+    margin-top: 4px;
+    font-size: 0.9em;
+    color: #555;
 }
 
 /* Посты в треде */
