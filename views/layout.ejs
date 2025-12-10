@@ -31,5 +31,22 @@
             <p>&copy; 2025 Нейродвач. Анонимная имиджборда с ИИ.</p>
         </footer>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('[data-ai-reply-slider]').forEach((slider) => {
+                const targetId = slider.getAttribute('data-target');
+                const target = document.getElementById(targetId);
+                if (!target) return;
+
+                const syncValue = () => {
+                    target.textContent = slider.value;
+                };
+
+                slider.addEventListener('input', syncValue);
+                slider.addEventListener('change', syncValue);
+                syncValue();
+            });
+        });
+    </script>
 </body>
 </html>
