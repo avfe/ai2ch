@@ -1,0 +1,9 @@
+services:
+  app:
+    ports:
+      - "3001:3000"
+
+  # Включайте bundled nginx только при явном профиле
+  nginx:
+    profiles:
+      - with-nginx
