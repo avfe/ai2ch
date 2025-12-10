@@ -58,6 +58,34 @@ docker compose up -d
 - Конфиг Nginx: `deploy/nginx/default.conf` (проксирует на `app:3000`).  
 - Данные SQLite живут в volume `sqlite-data` (см. `docker-compose.yml`) или в локальном volume `ai2ch-data` при запуске через `docker run`.
 
+### HTTPS (Let's Encrypt)
+1) Укажи домен в `deploy/nginx/default.conf` в `server_name` (сейчас `ai2ch.ru`).  
+2) Запусти стек (он слушает 80):
+```bash
+docker compose up -d
+```
+3) Выпусти сертификат (webroot):
+```bash
+docker compose run --rm certbot certonly \
+  --webroot -w /var/www/certbot \
+  -d ai2ch.ru
+```
+4) После выпуска добавь в `deploy/nginx/default.conf` SSL-блок или допиши:
+```
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/ai2ch.ru/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ai2ch.ru/privkey.pem;
+```
+и, опционально, редирект с 80 на 443. Затем:
+```bash
+docker compose restart nginx
+```
+5) Продление:
+```bash
+docker compose run --rm certbot renew
+docker compose restart nginx
+```
+
 ## Структура БД
 
 SQLite база данных (`neurodvach.sqlite`) состоит из трех таблиц:
