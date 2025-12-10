@@ -1,0 +1,34 @@
+<div class="thread-header">
+    <div>
+        <a href="/<%= board.slug %>/">&larr; Назад в /<%= board.slug %>/</a>
+    </div>
+    <h1 class="thread-title"><%= thread.title %></h1>
+</div>
+
+<div class="posts-list">
+    <% posts.forEach((post) => { %>
+        <div class="post <%= post.author_type === 'ai' ? 'ai-post' : '' %>" id="post-<%= post.id %>">
+            <div class="post-meta">
+                <span class="post-author"><%= post.author_name %></span>
+                <span class="post-num">#<%= post.id %></span>
+                <span class="post-date"><%= new Date(post.created_at).toLocaleString('ru-RU') %></span>
+                <% if (post.author_type === 'ai') { %>
+                    <span style="font-size: 0.8em; color: #d00; border: 1px solid #d00; padding: 0 4px; border-radius: 3px; margin-left: 5px;">AI</span>
+                <% } %>
+            </div>
+            <div class="post-content"><%= post.content %></div>
+        </div>
+    <% }) %>
+</div>
+
+<hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+
+<div class="form-container">
+    <h3 style="margin-top:0">Ответить в тред</h3>
+    <form action="/<%= board.slug %>/thread/<%= thread.id %>/reply" method="POST">
+        <div class="form-row">
+            <textarea name="content" required placeholder="Написать ответ..."></textarea>
+        </div>
+        <button type="submit">Ответить</button>
+    </form>
+</div>

@@ -1,0 +1,202 @@
+/* Базовые стили "под старину" */
+body {
+    background-color: #eeeff2; /* Классический светло-серый фон */
+    color: #333;
+    font-family: Verdana, sans-serif;
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #0000ee; /* Стандартный синий */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #d00;
+}
+
+/* Контейнер по центру */
+@media (min-width: 960px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+.container {
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #fff; /* Белый лист по центру */
+    min-height: 100vh;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+/* Хедер */
+header {
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    font-size: 2em;
+    font-weight: bold;
+    color: #ff6600; /* Акцентный оранжевый в духе 2ch */
+    font-family: 'Trebuchet MS', sans-serif;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.nav-links {
+    display: inline-block;
+}
+
+.nav-links a {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Таблицы (список борд/тредов) */
+table.list-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: 1px solid #aaa;
+}
+
+table.list-table th, table.list-table td {
+    border: 1px solid #aaa;
+    padding: 6px;
+    text-align: left;
+}
+
+table.list-table th {
+    background-color: #ea7b1d;
+    color: white;
+}
+
+table.list-table tr:nth-child(even) {
+    background-color: #f0f0f0;
+}
+
+/* Формы */
+.form-container {
+    background-color: #e0e0e0;
+    border: 1px solid #aaa;
+    padding: 10px;
+    margin-top: 20px;
+    max-width: 600px;
+}
+
+.form-row {
+    margin-bottom: 10px;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px;
+    font-family: sans-serif;
+    border: 1px solid #999;
+}
+
+textarea {
+    height: 100px;
+}
+
+button {
+    padding: 4px 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Посты в треде */
+.thread-header {
+    margin-bottom: 20px;
+}
+
+.thread-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #af0a0a;
+}
+
+.post {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin-bottom: 10px;
+    overflow: hidden; /* clear float */
+}
+
+/* Выделение AI постов */
+.post.ai-post {
+    background-color: #e8f0ff; /* Легкая синева для AI */
+    border-color: #aaccff;
+}
+
+.post-meta {
+    margin-bottom: 6px;
+    color: #555;
+    font-size: 0.9em;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 4px;
+}
+
+.post-num {
+    font-weight: bold;
+    color: #333;
+    margin-right: 5px;
+}
+
+.post-author {
+    font-weight: bold;
+    color: #117743; /* Зеленоватый для анона */
+}
+
+.post.ai-post .post-author {
+    color: #d00; /* Красный для AI */
+}
+
+.post-date {
+    float: right;
+    font-size: 0.85em;
+}
+
+.post-content {
+    margin-top: 5px;
+    white-space: pre-wrap; /* Сохранять переносы строк */
+    line-height: 1.4;
+}
+
+/* Утилиты */
+.center-box {
+    text-align: center;
+    padding: 50px;
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 10px 6px;
+        border-left: none;
+        border-right: none;
+    }
+
+    table.list-table th:nth-child(3),
+    table.list-table td:nth-child(3) {
+        display: none;
+    }
+}

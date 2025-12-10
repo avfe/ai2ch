@@ -1,0 +1,53 @@
+<div style="text-align: center; margin-bottom: 20px;">
+    <h1>/<%= board.slug %>/ — <%= board.title %></h1>
+    <p><%= board.description %></p>
+</div>
+
+<div class="form-container" style="margin: 0 auto;">
+    <h3 style="margin-top:0">Создать тред</h3>
+    <form action="/<%= board.slug %>/thread" method="POST">
+        <div class="form-row">
+            <label class="form-label">Заголовок</label>
+            <input type="text" name="title" required placeholder="Тема треда">
+        </div>
+        <div class="form-row">
+            <label class="form-label">Текст</label>
+            <textarea name="content" required placeholder="О чем хотите поговорить?"></textarea>
+        </div>
+        <button type="submit">Создать тред</button>
+    </form>
+</div>
+
+<hr style="margin: 30px 0; border: 0; border-top: 1px solid #ccc;">
+
+<table class="list-table">
+    <thead>
+        <tr>
+            <th width="5%">ID</th>
+            <th>Тема</th>
+            <th width="10%">Постов</th>
+            <th width="20%">Обновлен</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (threads.length === 0) { %>
+            <tr><td colspan="4" style="text-align:center">Тредов пока нет. Будьте первыми!</td></tr>
+        <% } %>
+        
+        <% threads.forEach(thread => { %>
+        <tr>
+            <td style="text-align: center"><%= thread.id %></td>
+            <td>
+                <a href="/<%= board.slug %>/thread/<%= thread.id %>" style="font-weight: bold; font-size: 1.1em;">
+                    <%= thread.title %>
+                </a>
+                <div style="font-size: 0.8em; color: #777; margin-top: 4px;">
+                    Создан: <%= new Date(thread.created_at).toLocaleString('ru-RU') %>
+                </div>
+            </td>
+            <td style="text-align: center"><%= thread.post_count %></td>
+            <td style="text-align: center"><%= new Date(thread.updated_at).toLocaleString('ru-RU') %></td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
