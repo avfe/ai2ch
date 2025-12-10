@@ -14,6 +14,21 @@
             <label class="form-label">Текст</label>
             <textarea name="content" required placeholder="О чем хотите поговорить?"></textarea>
         </div>
+        <div class="form-row">
+            <label class="form-label">
+                Ответов от нейродвачеров: <span id="create-ai-count">1</span>
+            </label>
+            <input 
+                type="range" 
+                name="aiReplies" 
+                min="1" 
+                max="5" 
+                value="1" 
+                data-ai-reply-slider 
+                data-target="create-ai-count"
+            >
+            <div style="font-size: 0.85em; color: #444;">Нейродвачеры сразу оставит выбранное число постов.</div>
+        </div>
         <button type="submit">Создать тред</button>
     </form>
 </div>

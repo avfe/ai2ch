@@ -29,6 +29,21 @@
         <div class="form-row">
             <textarea name="content" required placeholder="Написать ответ..."></textarea>
         </div>
+        <div class="form-row">
+            <label class="form-label">
+                Ответов от нейродвачеров: <span id="reply-ai-count">1</span>
+            </label>
+            <input
+                type="range"
+                name="aiReplies"
+                min="1"
+                max="5"
+                value="1"
+                data-ai-reply-slider
+                data-target="reply-ai-count"
+            >
+            <div style="font-size: 0.85em; color: #444;">Можно сразу получить несколько постов от Нейродвачеров.</div>
+        </div>
         <button type="submit">Ответить</button>
     </form>
 </div>
