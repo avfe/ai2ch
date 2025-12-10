@@ -46,16 +46,10 @@ function getModelId(userApiKey, userModelId) {
  * @param {string} [params.userModelId] - Предпочитаемая модель (если указан пользовательский ключ)
  * @returns {Promise<string>} Текст ответа
  */
-async function generateReplyForThread({ boardSlug, boardTitle, threadTitle, posts, userApiKey, userModelId }) {
+async function generateRepliesForThread({ boardSlug, boardTitle, threadTitle, posts, userApiKey, userModelId, replyCount = 1 }) {
     const client = getClient(userApiKey);
     if (!client) {
         return 'Системное сообщение: API ключ нейросети не настроен.';
- * @param {number} [params.replyCount=1] - Сколько постов нужно сгенерировать
- * @returns {Promise<string[]>} Тексты ответов
- */
-async function generateRepliesForThread({ boardSlug, boardTitle, threadTitle, posts, replyCount = 1 }) {
-    if (!aiClient) {
-        return ['Системное сообщение: API ключ нейросети не настроен.'];
     }
 
     const normalizedReplyCount = clampReplyCount(replyCount);
