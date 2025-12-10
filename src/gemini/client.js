@@ -3,6 +3,9 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const config = require('../config');
 const { GEMINI_SYSTEM_INSTRUCTION } = require('./systemPrompt');
 
+const USER_MODEL_OPTIONS = ['gemini-flash-latest', 'gemini-3-pro-preview'];
+
+// Инициализация клиента, если ключ предоставлен в переменных окружения
 // Разделитель для нескольких сгенерированных постов за один запрос
 const AI_POST_SEPARATOR = '<!--NEURODVACH_SPLIT-->';
 
@@ -14,6 +17,24 @@ if (config.GEMINI_API_KEY) {
     console.warn('WARNING: GEMINI_API_KEY is not set. AI replies will not work.');
 }
 
+function getClient(userApiKey) {
+    if (userApiKey && userApiKey.trim()) {
+        return new GoogleGenerativeAI(userApiKey.trim());
+    }
+    return aiClient;
+}
+
+function getModelId(userApiKey, userModelId) {
+    if (userApiKey && userApiKey.trim()) {
+        if (userModelId && USER_MODEL_OPTIONS.includes(userModelId)) {
+            return userModelId;
+        }
+        // Если ключ предоставлен, но модель не выбрана, используем быстрый вариант
+        return USER_MODEL_OPTIONS[0];
+    }
+    return config.GEMINI_MODEL_ID;
+}
+
 /**
  * Генерирует ответ нейросети на основе контекста треда.
  * @param {Object} params
@@ -21,12 +42,14 @@ if (config.GEMINI_API_KEY) {
  * @param {string} params.boardTitle - Название борды
  * @param {string} params.threadTitle - Заголовок треда
  * @param {Array} params.posts - Массив постов { id, author_type, content }
- * @param {number} [params.replyCount=1] - Сколько постов нужно сгенерировать
- * @returns {Promise<string[]>} Тексты ответов
+ * @param {string} [params.userApiKey] - Пользовательский API ключ (если указан)
+ * @param {string} [params.userModelId] - Предпочитаемая модель (если указан пользовательский ключ)
+ * @returns {Promise<string>} Текст ответа
  */
-async function generateRepliesForThread({ boardSlug, boardTitle, threadTitle, posts, replyCount = 1 }) {
-    if (!aiClient) {
-        return ['Системное сообщение: API ключ нейросети не настроен.'];
+async function generateRepliesForThread({ boardSlug, boardTitle, threadTitle, posts, userApiKey, userModelId, replyCount = 1 }) {
+    const client = getClient(userApiKey);
+    if (!client) {
+        return 'Системное сообщение: API ключ нейросети не настроен.';
     }
 
     const normalizedReplyCount = clampReplyCount(replyCount);
@@ -47,8 +70,8 @@ async function generateRepliesForThread({ boardSlug, boardTitle, threadTitle, po
 Если отвечаешь на конкретный пост, указывай его номер через >>ID и при необходимости вставляй цитату из контекста отдельной строкой, начинающейся с ">".`;
 
         // Вызов API (новый SDK @google/generative-ai)
-        const model = aiClient.getGenerativeModel({
-            model: config.GEMINI_MODEL_ID,
+        const model = client.getGenerativeModel({
+            model: getModelId(userApiKey, userModelId),
             systemInstruction: { parts: [{ text: GEMINI_SYSTEM_INSTRUCTION }] }
         });
 

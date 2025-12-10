@@ -33,7 +33,7 @@ router.get('/:boardSlug', (req, res, next) => {
 // POST /:boardSlug/thread - Создание нового треда
 router.post('/:boardSlug/thread', async (req, res, next) => {
     const { boardSlug } = req.params;
-    const { title, content, aiReplies } = req.body;
+    const { title, content, geminiApiKey, aiReplies, geminiModelId } = req.body;
     const replyCount = clampReplyCount(aiReplies);
 
     const board = db.prepare('SELECT * FROM boards WHERE slug = ?').get(boardSlug);
@@ -67,6 +67,8 @@ router.post('/:boardSlug/thread', async (req, res, next) => {
             boardTitle: board.title,
             threadTitle: title,
             posts: allPosts,
+            userApiKey: geminiApiKey,
+            userModelId: geminiModelId,
             replyCount
         });
 

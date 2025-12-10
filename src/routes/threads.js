@@ -27,7 +27,7 @@ router.get('/:boardSlug/thread/:threadId', (req, res, next) => {
 // POST /:boardSlug/thread/:threadId/reply - Ответ в тред
 router.post('/:boardSlug/thread/:threadId/reply', async (req, res, next) => {
     const { boardSlug, threadId } = req.params;
-    const { content, aiReplies } = req.body;
+    const { content, geminiApiKey, aiReplies, geminiModelId } = req.body;
     const replyCount = clampReplyCount(aiReplies);
 
     const board = db.prepare('SELECT * FROM boards WHERE slug = ?').get(boardSlug);
@@ -54,6 +54,8 @@ router.post('/:boardSlug/thread/:threadId/reply', async (req, res, next) => {
             boardTitle: board.title,
             threadTitle: thread.title,
             posts: allPosts,
+            userApiKey: geminiApiKey,
+            userModelId: geminiModelId,
             replyCount
         });
 
